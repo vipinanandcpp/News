@@ -1,0 +1,25 @@
+{
+	"BusinessInsider":{
+				"base_url":"http://www.businessinsider.com/",
+				"source_urls":["http://www.businessinsider.com/category/10-things-before-opening-bell.rss"],
+				"scheduled":[true],
+				"color":"#ff9900"
+			},
+	"CNN":{
+			"base_url":"http://money.cnn.com/",
+			"source_urls":["http://rss.cnn.com/rss/money_news_economy.rss"]
+		},
+	"ELUNIVERSAL":{
+				"base_url":"http://www.eluniversal.com.mx/",
+				"source_urls":["http://www.eluniversal.com.mx/rss.xml"]
+		},
+	"JORNADA":{
+			"base_url":"http://www.jornada.unam.mx/ultimas",
+			"source_urls":["http://www.jornada.unam.mx/rss/economia.xml?v=1"]
+	},
+	"Banxico":{
+			"base_url":"http://www.banxico.org.mx/",
+			"source_urls":["http://www.banxico.org.mx/rsscb/rss?BMXC_canal=fix&BMXC_idioma=es"]
+	}
+
+}

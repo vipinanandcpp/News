@@ -1,0 +1,7 @@
+{
+	"processing":{
+		"ID" : "processing",
+		"public_ip" : "10.0.0.228",
+		"private_ip" : "127.0.0.1"
+	}
+}
