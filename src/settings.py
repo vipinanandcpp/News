@@ -2,10 +2,11 @@ import os
 import platform
 
 home_directory = os.path.expanduser('~')
+parent_directory = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 data_directory = os.path.join(home_directory,'news', 'data')
-database_directory = os.path.join(home_directory,'Dropbox','News','database')
+database_directory = os.path.join(parent_directory,'database')
 cache_directory = os.path.join(home_directory, 'news', 'cache')
-src_files = os.path.join(home_directory,'Dropbox','News', 'src')
+src_files = os.path.join(parent_directory, 'src')
 log_directory = '/opt/logs'
 
 python_main_version,python_change_version,python_subchange_version = platform.python_version_tuple()
