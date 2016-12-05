@@ -1,8 +1,9 @@
-import os
+import os, inspect
 import platform
-
+current_module = sys.modules[__name__]
+module_directory = os.path.dirname(inspect.getabsfile(current_module))
 home_directory = os.path.expanduser('~')
-parent_directory = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+parent_directory = os.path.abspath(os.path.join(module_directory, os.pardir))
 data_directory = os.path.join(home_directory,'news', 'data')
 database_directory = os.path.join(parent_directory,'database')
 cache_directory = os.path.join(home_directory, 'news', 'cache')
