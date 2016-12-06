@@ -1,13 +1,11 @@
-import os, inspect
+from src import project_directory
+import os
 import platform
-current_module = sys.modules[__name__]
-module_directory = os.path.dirname(inspect.getabsfile(current_module))
 home_directory = os.path.expanduser('~')
-parent_directory = os.path.abspath(os.path.join(module_directory, os.pardir))
 data_directory = os.path.join(home_directory,'news', 'data')
-database_directory = os.path.join(parent_directory,'database')
+database_directory = os.path.join(project_directory,'database')
 cache_directory = os.path.join(home_directory, 'news', 'cache')
-src_files = os.path.join(parent_directory, 'src')
+src_files = os.path.join(project_directory, 'src')
 log_directory = '/opt/logs'
 
 python_main_version,python_change_version,python_subchange_version = platform.python_version_tuple()
