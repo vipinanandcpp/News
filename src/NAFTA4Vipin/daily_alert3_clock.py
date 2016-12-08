@@ -31,7 +31,7 @@ logging.basicConfig()
 import sys, logging, traceback
 import concurrent.futures as cf
 from concurrent.futures import ThreadPoolExecutor
-from goose import Goose
+#from goose import Goose
 
 
 # In[2]:
