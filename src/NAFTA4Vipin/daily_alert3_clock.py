@@ -36,10 +36,6 @@ from concurrent.futures import ThreadPoolExecutor
 
 # In[2]:
 
-import sys, logging, traceback
-import concurrent.futures as cf
-from concurrent.futures import ThreadPoolExecutor
-#from goose import Goose
 
 from datetime import  timedelta
 from os import path
