@@ -102,7 +102,7 @@ def start_storing(username,path):
     sinceId=give_me_sinceid(username,path)
     maxTweets = 10000000 # Some arbitrary large number
     tweetsPerQry = 100  # this is the max the API permits
-    max_id = -1L
+    max_id = int(-1)
     tweetCount = 0
     print("Downloading max {0} tweets".format(maxTweets))
     with open(fName, 'a') as f:
