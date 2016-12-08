@@ -136,7 +136,7 @@ def start_storing(username,path):
 
 
 #if __name__ == "__main__":
-@sched.scheduled_job('cron', hour=0,minute=0,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=8,minute=30,misfire_grace_time=60)
 def timed_job():
     #path1='S:\\Quant\\JAPEREZ\\TOP_ACCOUNTS'
     path1=os.path.join(settings.src_files, 'NAFTA4Vipin','stored_accounts')
