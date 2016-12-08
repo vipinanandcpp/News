@@ -12,6 +12,8 @@ import re
 from os import path
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+import settings
+
 sched = BlockingScheduler()
 # In[25]:
 
@@ -25,10 +27,10 @@ API_SECRET="31f7HkPPpCCEuVzC1FWEgRZLI0f06UQo3Ax80qopjxdzJ0gm3B"
 # In[26]:
 
 auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)
- 
+
 api = tweepy.API(auth, wait_on_rate_limit=True,
 				   wait_on_rate_limit_notify=True)
- 
+
 if (not api):
     print ("Can't Authenticate")
     sys.exit(-1)
@@ -85,16 +87,16 @@ def give_me_sinceid(username,path):
         for line in f:
             result = jsonpickle.decode(line)
             lista.append(result['id'])
-    
+
     lista.sort()
     return lista[-1]
-           
-    
+
+
 
 
 # In[11]:
 
-#once the original file is stored we proceed to store onn regular basis. 
+#once the original file is stored we proceed to store onn regular basis.
 def start_storing(username,path):
     fName=path+"/"+username+".txt"
     sinceId=give_me_sinceid(username,path)
@@ -134,25 +136,25 @@ def start_storing(username,path):
 
 
 #if __name__ == "__main__":
-@sched.scheduled_job('cron', hour=8,minute=30,misfire_grace_time=60)    
+@sched.scheduled_job('cron', hour=0,minute=0,misfire_grace_time=60)
 def timed_job():
     #path1='S:\\Quant\\JAPEREZ\\TOP_ACCOUNTS'
-    path1='/Users/joseantonioperez/Dropbox/NAFTA/stored_accounts'
+    path1=os.path.join(settings.src_files, 'NAFTA4Vipin','stored_accounts')
     username='OpenOutCrier'
     PATHtest=path1+"/"+username+".txt"
     if path.exists(PATHtest) and path.isfile(PATHtest):
         start_storing(username,path1)
     else:
         prepare_initial_set(username,path1)
-        
+
     username='RealDonaldTrump'
     PATHtest=path1+"/"+username+".txt"
     if path.exists(PATHtest) and path.isfile(PATHtest):
         start_storing(username,path1)
     else:
-        prepare_initial_set(username,path1)   
-     
-    
+        prepare_initial_set(username,path1)
+
+
 
 sched.start()
 

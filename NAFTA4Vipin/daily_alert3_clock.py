@@ -46,6 +46,9 @@ from os import path
 import jsonpickle
 
 import os, pytz
+
+import settings
+
 eastern = pytz.timezone('US/Eastern')
 utc = pytz.timezone('UTC')
 
@@ -106,7 +109,7 @@ def prepare_wsj():
     pq = PyQuery('http://www.wsj.com/news/heard-on-the-street')
 
     base_url = 'http://www.wsj.com/'
-    
+
     blog_url='http://blogs.wsj.com/'
 
     urls = []
@@ -125,15 +128,15 @@ def prepare_wsj():
     #url_processor = URLProcessor()
 
     liston_wsj=list()
-    
+
     for elem in urls:
         article=url_processor.process_url(elem)
         liston_wsj.append((article.title,elem))
 
-    return liston_wsj    
+    return liston_wsj
 
-    
-    
+
+
 
 
 # In[6]:
@@ -251,16 +254,16 @@ def prepare_financiero():
             urls.append(base_url+href)
             texto.append(item.text)
     liston_financiero=list()
-    
+
     for aux  in range(len(urls)):
         liston_financiero.append((texto[aux],urls[aux]))
-    return  liston_financiero  
-        
-        
-        
-        
-        
-    
+    return  liston_financiero
+
+
+
+
+
+
 
 
 # In[12]:
@@ -271,7 +274,7 @@ def prepare_universal():
     texto=[]
     base_url='http://www.eluniversal.com.mx'
     pq = PyQuery('http://www.eluniversal.com.mx/cartera/economia/')
-    
+
     #for item in pq(' .field-content a'):
     for item in pq('.field-content a'):
         href  = item.attrib['href']
@@ -288,18 +291,18 @@ def prepare_universal():
         else:
             urls.append(base_url+href)
             texto.append(item.text)
-            
+
     liston_universal=list()
-    
+
     for aux  in range(len(urls)):
         liston_universal.append((texto[aux],urls[aux]))
-    return  liston_universal  
-        
+    return  liston_universal
+
 def gimma_donald_df():
     today=datetime.datetime.now() - timedelta(days=5)
     today=today.date()
     names=['time','text']
-    path1='/Users/joseantonioperez/Dropbox/NAFTA/stored_accounts'
+    path1=os.path.join(settings.src_files, 'NAFTA4Vipin','stored_accounts')
     username='RealDonaldTrump'
     fName=path1+"/"+username+".txt"
     if not path.exists(fName):
@@ -313,11 +316,11 @@ def gimma_donald_df():
                 pp=result['created_at']
                 ff=datetime.datetime.strptime(pp,'%a %b %d %H:%M:%S +0000 %Y')
                 gg=utc.localize(ff).astimezone(eastern)
-                if gg.date()>=today:              
+                if gg.date()>=today:
                     #print result['text'],ff,gg,id_,gg.strftime("%Y-%m-%d %H:%M:%S %Z")
                     pos_out.loc[id_]=[gg.strftime("%Y-%m-%d %H:%M:%S %Z"),result['text']]
-            
-        
+
+
 
     pos_out.sort_index(inplace=True,ascending=False)
 
@@ -349,13 +352,13 @@ def prepare_donald():
 
 
 
-    
+
 
 
 # In[13]:
 
 def prepare_big_csv(big_liston):
-    path='/Users/joseantonioperez/Dropbox/NAFTA/stored_news'
+    path=os.path.join(settings.src_files, 'NAFTA4Vipin','stored_news')
     today=datetime.datetime.now().date()
     df_out=pd.DataFrame(columns=['text','url'])
     contador=0
@@ -363,13 +366,13 @@ def prepare_big_csv(big_liston):
         for news in agency:
             df_out.loc[contador]=news
             contador=contador+1
-            
+
     df_out.to_csv(path+"/"+"TOP_NEWS_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
-    print "news done"
-           
-            
-            
-        
+    print ("news done")
+
+
+
+
 
 
 # In[17]:
@@ -394,13 +397,13 @@ def prepare_big_html(big_liston,color):
     if  len(tempo)>0:
         for elem in tempo:
             total=total+elem
-            
-            
+
+
     tempo=prepare_html(big_liston[4],color[4])
     if  len(tempo)>0:
         for elem in tempo:
             total=total+elem
-            
+
     tempo=prepare_html(big_liston[5],color[5])
     if  len(tempo)>0:
         for elem in tempo:
@@ -415,18 +418,18 @@ def prepare_big_html(big_liston,color):
 def prepare_big_html_new(big_liston,color):
     total = "<html><body><table border=5 BORDERCOLOR=BLUE><CAPTION><b><u>  NAFTA INSIGHT 1345 </u></b></CAPTION>";
     total = total + "<tr><td><b>" + "TITLE" + "</b><td width='230' align=center><b>"  + "SOURCE" + "</b></tr>";
-    
+
     for kk in range(len(big_liston)):
         tempo=prepare_html(big_liston[kk],color[kk])
         if  len(tempo)>0:
             for elem in tempo:
                 total=total+elem
-    
+
 
     total = total + "</table></body></html>";
 
-    return total    
-        
+    return total
+
 
 
 # In[18]:
@@ -435,13 +438,13 @@ def send_email_new(users,total):
 	today=datetime.datetime.now()
 	text="TOP NEWS "+today.strftime('%m/%d/%Y %H:%M')
 	s = smtplib.SMTP("smtp.gmail.com",587)
-	
+
 	me = 'naftainsight1345@gmail.com'
 	pwd='emerson1954'
 	s.ehlo()
 	s.starttls()
 	s.login(me, pwd)
-    
+
 	you =users
 	msg = MIMEMultipart('alternative')
 	msg['Subject'] =text
@@ -449,7 +452,7 @@ def send_email_new(users,total):
 	msg['To'] =[]
 	msg['Cc'] =[]
 	#msg['Bcc'] =you
-	
+
 	#html=total
 	part1 = MIMEText(text, 'plain')
 	part2 = MIMEText(total, 'html','utf-8')
@@ -467,7 +470,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=8,minute=45,misfire_grace_time=60)    
+@sched.scheduled_job('cron', hour=8,minute=45,misfire_grace_time=60)
 def timed_job():
 # In[3]:
     liston_donald=prepare_donald()
@@ -477,9 +480,9 @@ def timed_job():
     liston_cnn=prepare_cnn()
     liston_financiero=prepare_financiero()
     liston_universal=prepare_universal()
-    
 
-    
+
+
 
     if liston_donald is  None:
         big_liston=[liston_universal,liston_financiero,liston_bi,liston_cnn,liston_bb,liston_wsj]
@@ -493,7 +496,8 @@ def timed_job():
 
     #users="jose.pereza@me.com;vipin.anand.cpp@gmail.com;salumgreco@hotmail.com"
 
-    users='egreenfield@121send.com;Raphael_Kuenstle@gmx.net;jmcanchola@gmail.com;apina1411@gmail.com;jose.pereza@me.com;vipin.anand.cpp@gmail.com;japerez20@gmail.com;juanmanuelhec@gmail.com;salumgreco@hotmail.com;jtmaclay@yahoo.com'
+    #users='egreenfield@121send.com;Raphael_Kuenstle@gmx.net;jmcanchola@gmail.com;apina1411@gmail.com;jose.pereza@me.com;vipin.anand.cpp@gmail.com;japerez20@gmail.com;juanmanuelhec@gmail.com;salumgreco@hotmail.com;jtmaclay@yahoo.com'
+    users = 'jose.pereza@me.com;vipin.anand.cpp@gmail.com'
 
     send_email_new(users,total)
     prepare_big_csv(big_liston)
