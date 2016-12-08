@@ -43,7 +43,7 @@ def prepare_initial_set(username,path):
     maxTweets = 10000000 # Some arbitrary large number
     tweetsPerQry = 100  # this is the max the API permits
     sinceId = None
-    max_id = -1L
+    max_id = int(-1)
     fName=path+"/"+username+".txt"
     tweetCount = 0
     print("Downloading max {0} tweets".format(maxTweets))
