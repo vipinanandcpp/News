@@ -47,6 +47,8 @@ import jsonpickle
 
 import os, pytz
 
+from url_processor import URLProcessor
+
 import settings
 
 eastern = pytz.timezone('US/Eastern')
@@ -55,39 +57,39 @@ utc = pytz.timezone('UTC')
 
 # In[3]:
 
-class URLProcessor(object):
-	g = Goose()
+# class URLProcessor(object):
+# 	g = Goose()
 
-	def __init__(self, max_workers=50):
-		self.max_workers = max_workers
+# 	def __init__(self, max_workers=50):
+# 		self.max_workers = max_workers
 
-	@staticmethod
-	def run_extraction(url):
-		extracted = None
-		try:
-			extracted = URLProcessor.g.extract(url = url)
-		except Exception as e:
-			sys.stderr.write('\n\t' + str(traceback.print_exc()))
-			logging.error(e, exc_info=1)
-			extracted = None
-		return extracted
+# 	@staticmethod
+# 	def run_extraction(url):
+# 		extracted = None
+# 		try:
+# 			extracted = URLProcessor.g.extract(url = url)
+# 		except Exception as e:
+# 			sys.stderr.write('\n\t' + str(traceback.print_exc()))
+# 			logging.error(e, exc_info=1)
+# 			extracted = None
+# 		return extracted
 
-	def process_url(self, url):
-		return URLProcessor.run_extraction(url)
+# 	def process_url(self, url):
+# 		return URLProcessor.run_extraction(url)
 
-	def process_urls(self, urls, timeout = 600):
-		results = {}
-		with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-			futures = {executor.submit(self.process_url, url):url for url in urls}
-			for future in cf.as_completed(futures, timeout=timeout):
-				if future.result() is not None:
-					url = futures[future]
-					try:
-						results[url] = future.result()
-					except Exception as e:
-						sys.stderr.write('\n\t' + str(traceback.print_exc()))
-						logging.error(e, exc_info=1)
-		return results
+# 	def process_urls(self, urls, timeout = 600):
+# 		results = {}
+# 		with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+# 			futures = {executor.submit(self.process_url, url):url for url in urls}
+# 			for future in cf.as_completed(futures, timeout=timeout):
+# 				if future.result() is not None:
+# 					url = futures[future]
+# 					try:
+# 						results[url] = future.result()
+# 					except Exception as e:
+# 						sys.stderr.write('\n\t' + str(traceback.print_exc()))
+# 						logging.error(e, exc_info=1)
+# 		return results
 url_processor = URLProcessor()
 palabras=['the border','manufacturing','remmitance','carrier','indiana','indianapolis','plant','trade','tariff','tariffs','wall','mexican','mexicans','mexico','kentucky','ford','general electric','deport','deportation','deporting','immigrant','immigrants','immigration','illegal','cartels','enrique','nieto','vicente']
 
