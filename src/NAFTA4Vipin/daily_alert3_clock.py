@@ -443,13 +443,13 @@ def send_email_new(users,total):
 	s.starttls()
 	s.login(me, pwd)
 
-	you =users
+	you =users.split(',')
 	msg = MIMEMultipart('alternative')
 	msg['Subject'] =text
 	msg['From'] = me
-	msg['To'] =[]
-	msg['Cc'] =[]
-	#msg['Bcc'] =you
+	#msg['To'] = you
+	#msg['Cc'] =[]
+	#msg['bcc'] = users
 
 	#html=total
 	part1 = MIMEText(text, 'plain')
@@ -460,16 +460,15 @@ def send_email_new(users,total):
 	# the HTML message, is best and preferred.
 	msg.attach(part1)
 	msg.attach(part2)
-	print msg
-	#s.sendmail(me,[me]+[me]+ you.split(";"), msg.as_string().encode('ascii'))
-	#s.quit()
+	s.sendmail(me, you, msg.as_string().encode('ascii'))
+	s.quit()
 	print('email sent.')
 
 
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=8,minute=45,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=21,minute=59,misfire_grace_time=60)
 def timed_job():
 # In[3]:
 	liston_donald=prepare_donald()
@@ -495,8 +494,8 @@ def timed_job():
 
 	#users="jose.pereza@me.com;vipin.anand.cpp@gmail.com;salumgreco@hotmail.com"
 
-	#users='egreenfield@121send.com;Raphael_Kuenstle@gmx.net;jmcanchola@gmail.com;apina1411@gmail.com;jose.pereza@me.com;vipin.anand.cpp@gmail.com;japerez20@gmail.com;juanmanuelhec@gmail.com;salumgreco@hotmail.com;jtmaclay@yahoo.com'
-	users = 'jose.pereza@me.com;vipin.anand.cpp@gmail.com'
+	users='egreenfield@121send.com,Raphael_Kuenstle@gmx.net,jmcanchola@gmail.com,apina1411@gmail.com,jose.pereza@me.com,vipin.anand.cpp@gmail.com,japerez20@gmail.com,juanmanuelhec@gmail.com,salumgreco@hotmail.com,jtmaclay@yahoo.com'
+	#users = 'jose.pereza@me.com,vipin.anand.cpp@gmail.com'
 
 	send_email_new(users,total)
 	prepare_big_csv(big_liston)
