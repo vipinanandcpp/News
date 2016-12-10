@@ -468,7 +468,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=21,minute=59,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=8,minute=45,misfire_grace_time=60)
 def timed_job():
 # In[3]:
 	liston_donald=prepare_donald()
