@@ -16,11 +16,11 @@ class URLProcessor(object):
 		self.max_workers = max_workers
 
 	@staticmethod
-	def run_extraction(url):
+	def run_extraction(url, language='en'):
 		extracted = None
 		try:
 			r = requests.get(url, headers=headers, verify=False, timeout=600)
-			extracted = Article(url = url)
+			extracted = Article(url = url, language=language)
 			extracted.download(html=r.content)
 			extracted.parse()
 			extracted.nlp()
@@ -30,13 +30,13 @@ class URLProcessor(object):
 			extracted = None
 		return extracted
 
-	def process_url(self, url):
-		return URLProcessor.run_extraction(url)
+	def process_url(self, url, language='en'):
+		return URLProcessor.run_extraction(url, language=language)
 
-	def process_urls(self, urls, timeout = 600):
+	def process_urls(self, urls, timeout = 600, language = 'en'):
 		results = {}
 		with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-			futures = {executor.submit(self.process_url, url):url for url in urls}
+			futures = {executor.submit(self.process_url, url, language=language):url for url in urls}
 			for future in cf.as_completed(futures, timeout=timeout):
 				if future.result() is not None:
 					url = futures[future]
