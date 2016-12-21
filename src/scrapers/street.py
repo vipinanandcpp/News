@@ -88,6 +88,7 @@ class TheStreet(NewsParsers):
 				if self.test_mode == False:
 					self.insert_alerts(alerts)
 					del alerts
+				del ticker_url_timestamp_map, results, news_urls, response
 				start = start + 30
 				page = page + 1
 			except Exception as e:
