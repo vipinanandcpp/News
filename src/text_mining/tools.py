@@ -6,7 +6,7 @@ import requests
 import justext
 import xmltodict
 #from mechanize import Browser
-#from selenium import webdriver
+from selenium import webdriver
 from unidecode import unidecode
 from bs4 import UnicodeDammit
 from bson import json_util
