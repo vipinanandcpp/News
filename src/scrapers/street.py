@@ -87,6 +87,7 @@ class TheStreet(NewsParsers):
 					break
 				if self.test_mode == False:
 					self.insert_alerts(alerts)
+					del alerts
 				start = start + 30
 				page = page + 1
 			except Exception as e:
