@@ -13,6 +13,8 @@ import settings
 try:
 # For Python 3.0 and later
 	import queue as Queue
+	from requests.packages.urllib3.exceptions import InsecureRequestWarning
+	requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 except ImportError:
 # Fall back to Python 2's urllib2
 	import Queue as Queue
