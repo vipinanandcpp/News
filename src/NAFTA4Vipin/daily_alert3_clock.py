@@ -14,14 +14,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 # In[2]:
-import time
 import datetime
 #import win32com.client
-import numpy as np
-import collections
 #import pythoncom
 import feedparser
-import rfc822
 import email
 
 import logging
@@ -523,7 +519,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=16,minute=5,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=16,minute=25,misfire_grace_time=60)
 def timed_job():
 # In[3]:
     liston_rss_usd=prepare_rss_usd()
