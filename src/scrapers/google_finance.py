@@ -81,6 +81,7 @@ class GoogleFinance(NewsParsers):
 							alerts.append(d)
 			if len(alerts):
 				sys.stdout.write('\n Found %d new alerts for ticker %s'%(len(alerts), ticker))
+			del ticker_url_timestamp_map, news_urls, results, response
 		except Exception as e:
 			sys.stderr.write('\n\t' + str(traceback.print_exc()))
 			logging.error(e, exc_info=1)

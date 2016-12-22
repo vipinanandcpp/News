@@ -87,10 +87,9 @@ class TheStreet(NewsParsers):
 					break
 				if self.test_mode == False:
 					self.insert_alerts(alerts)
-					del alerts
-				del ticker_url_timestamp_map, results, news_urls, response
 				start = start + 30
 				page = page + 1
+				del alerts, ticker_url_timestamp_map, results, news_urls, response
 			except Exception as e:
 				sys.stderr.write('\n\t' + str(traceback.print_exc()))
 				logging.error(e, exc_info=1)
