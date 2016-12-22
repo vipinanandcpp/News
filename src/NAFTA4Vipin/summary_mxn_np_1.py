@@ -10,7 +10,6 @@ import os, sys, re, pytz, datetime
 
 import pandas as pd
 #import pyquery
-import requests
 import unicodedata
 
 from apscheduler.schedulers.blocking import BlockingScheduler
