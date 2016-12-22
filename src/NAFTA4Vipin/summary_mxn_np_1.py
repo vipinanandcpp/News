@@ -354,7 +354,6 @@ def create_history_df(days_2_past,path3):
 	for elem in selected:
 
 		tf=pd.read_csv(path3+"//"+elem)
-		print tf.shape
 		df=df.append(tf, ignore_index=True)
 
 	df1=df.drop_duplicates(['url'], keep='last')
