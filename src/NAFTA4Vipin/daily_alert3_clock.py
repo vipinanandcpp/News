@@ -421,7 +421,7 @@ def prepare_big_csv(big_liston):
             contador=contador+1
 
     df_out.to_csv(path+"/"+"TOP_NEWS_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
-    print "news done"
+    print ("news done")
 
 
 
