@@ -263,7 +263,7 @@ def url_date(url):
         try:
             fecha=elem['published']
             pp=rfc822_f(fecha)
-            gg=utc.localize(pp).astimezone(eastern)
+            gg=pp.astimezone(eastern)
             today=datetime.datetime.now()
             if gg.date()>=today.date():
 
@@ -522,7 +522,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=17,minute=0,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=17,minute=8,misfire_grace_time=60)
 def timed_job():
 # In[3]:
     liston_rss_usd=prepare_rss_usd()
