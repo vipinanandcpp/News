@@ -3,12 +3,11 @@
 
 # In[1]:
 
-
 from apscheduler.schedulers.blocking import BlockingScheduler
 from pyquery import PyQuery
 import pandas as pd
 
-import smtplib
+import smtplib, requests
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -42,6 +41,13 @@ from dateutil import parser as dateparser
 
 
 import os, pytz
+
+try:
+	from requests.packages.urllib3.exceptions import InsecureRequestWarning
+	requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+except ImportError:
+	pass
+
 eastern = pytz.timezone('US/Eastern')
 utc = pytz.timezone('UTC')
 
