@@ -38,6 +38,8 @@ from url_processor import URLProcessor
 from datetime import  timedelta
 from os import path
 import jsonpickle
+from dateutil import parser as dateparser
+
 
 import os, pytz
 eastern = pytz.timezone('US/Eastern')
@@ -275,7 +277,8 @@ def url_date(url):
     return lista
 
 def rfc822_f(timestamp):
-    return datetime.datetime.fromtimestamp(email.Utils.mktime_tz(email.Utils.parsedate_tz(timestamp)))
+    return dateparser.parse(timestamp)
+
 def prepare_rss_mxn():
     jornada="http://www.jornada.unam.mx/rss/economia.xml?v=1"
     universal="http://www.eluniversal.com.mx/seccion/14/rss.xml"
@@ -519,7 +522,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=16,minute=25,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=17,minute=0,misfire_grace_time=60)
 def timed_job():
 # In[3]:
     liston_rss_usd=prepare_rss_usd()
