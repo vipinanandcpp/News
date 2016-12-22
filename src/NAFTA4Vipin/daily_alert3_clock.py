@@ -528,7 +528,7 @@ def send_email_new(users,total):
 # In[19]:
 
 #brain
-@sched.scheduled_job('cron', hour=17,minute=11,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=8,minute=45,misfire_grace_time=60)
 def timed_job():
 # In[3]:
     liston_rss_usd=prepare_rss_usd()
