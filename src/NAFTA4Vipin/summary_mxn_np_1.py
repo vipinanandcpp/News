@@ -609,7 +609,7 @@ def send_email_new(users,total):
 # In[37]:
 
 #combo
-@sched.scheduled_job('cron', hour=16,minute=30,misfire_grace_time=60)
+@sched.scheduled_job('cron', hour=15,minute=05,misfire_grace_time=60)
 def timed_job():
 	days_2_past=0
 	df_history=create_history_df(days_2_past,path3)
