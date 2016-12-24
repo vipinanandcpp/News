@@ -119,7 +119,7 @@ class TheStreet(NewsParsers):
 				if self.run_history:
 					break
 			except Exception as e:
-				sys.stderr.write('\nController Error -> %s @ %s' % (e.message, datetime.datetime.now()))
+				sys.stderr.write('\nController Error -> %s @ %s' % (str(e), datetime.datetime.now()))
 				sys.stderr.write('\n\t' + str(traceback.print_exc()))
 				logging.error(e, exc_info=1)
 			finally:
