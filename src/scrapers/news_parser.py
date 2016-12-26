@@ -28,7 +28,7 @@ dummy_ticker = 'NEWS_HEADLINE'
 
 class NewsParsers(object):
 	__metaclass__ = abc.ABCMeta
-	def __init__(self, domain, group='newswires', test_mode=False, timeout = 30, max_workers = 50, parse_articles = False, run_history=False, expire_redis_keys = True):
+	def __init__(self, domain, group='newswires', test_mode=False, timeout = 30, max_workers = 50, parse_articles = False, run_history=False, expire_redis_keys = False):
 		self.domain = domain
 		self.run_history = run_history
 		self.parse_articles = parse_articles
@@ -82,7 +82,7 @@ class NewsParsers(object):
 				sys.stderr.write('\n\t' + str(traceback.print_exc()))
 				break
 			except Exception as e:
-				sys.stderr.write('\nError pulling articles -> %s %s %s\n' % (e.message,self.domain, str(utc.localize(datetime.datetime.utcnow()).astimezone(eastern))))
+				sys.stderr.write('\nError pulling articles -> %s %s %s\n' % (str(e),self.domain, str(utc.localize(datetime.datetime.utcnow()).astimezone(eastern))))
 				sys.stderr.write('\n\t' + str(traceback.print_exc()))
 		return results
 
@@ -143,7 +143,7 @@ class NewsParsers(object):
 				if self.run_history:
 					break
 			except Exception as e:
-				sys.stderr.write('\nController Error -> %s @ %s' % (e.message, datetime.datetime.now()))
+				sys.stderr.write('\nController Error -> %s @ %s' % (str(e), datetime.datetime.now()))
 				sys.stderr.write('\n\t' + str(traceback.print_exc()))
 			finally:
 				sys.stdout.flush()

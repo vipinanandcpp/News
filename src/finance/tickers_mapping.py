@@ -1,6 +1,7 @@
 import os, gzip, datetime, sys, requests
 from pyquery import PyQuery
 import pandas as pd
+from url_processor import headers
 
 try:
 # For Python 3.0 and later
@@ -59,7 +60,7 @@ def get_tickers_by_industry_exchange_nasdaq():
 
 def get_etfs_data():
 	base_url = 'http://www.nasdaq.com/investing/etfs/etf-finder-results.aspx'
-	r = requests.get(base_url)
+	r = requests.get(base_url, headers=headers, verify=False, timeout=600)
 	pq = PyQuery(r.content)
 	sectors = ['-'.join(d[0].lower().split()) for d in zip(*[iter(pq('#two_column_main_content_DropDownsector option').contents())])][1:]
 	etfs_db = None
