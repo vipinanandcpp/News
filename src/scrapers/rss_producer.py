@@ -1,23 +1,32 @@
-import sys, argparse, os, time, kombu, settings
+import sys, argparse, os, time, settings, threading
+from pika_publisher import PIKA_PUBLISHER
 from url_processor import URLProcessor
 from bson import json_util
 import feedparser
 from scrapers.news_parser import NewsParsers, redis_connection
-from Utilities import rabbitmq_connection0
+from Utilities import hostname0
 import rss_producer_rules
 import logging
+
 
 class RSS_PRODUCER(NewsParsers):
 	def __init__(self, domain, group='rss',parse_articles = False, test_mode = False, timeout = 600, max_workers = 10, expire_redis_keys = False):
 		super(RSS_PRODUCER, self).__init__(domain= domain, group=group, test_mode=test_mode, timeout=timeout, parse_articles=parse_articles, max_workers = max_workers, expire_redis_keys = expire_redis_keys)
 		self.url_processor = URLProcessor(max_workers = max_workers)
 		self.rss_producer_rule_instance = getattr(rss_producer_rules, self.domain)()
+		self.pika_publisher = None
 		if self.test_mode is False:
-			self.start_producer()
+			try:
+				self.pika_publisher = PIKA_PUBLISHER(amqp_url = "amqp://%s"%(hostname0), exchange_name = self.group, routing_key = self.group, queue_name = self.group, exchange_type = 'direct')
+				self.start_producer()
+			except Exception as e:
+				sys.stderr.write('Error connecting to RabbitMQ\n -> %s'%(e))
 
 	def __del__(self):
-		rabbitmq_connection0.release()
 		super(RSS_PRODUCER, self).__del__()
+		if self.pika_publisher is not None:
+			sys.stdout.write("Shutting down RSS producer channel\n")
+			self.pika_publisher.stop()
 
 	def process_article(self, alert, article):
 		return alert
@@ -32,23 +41,29 @@ class RSS_PRODUCER(NewsParsers):
 
 	def start_producer(self):
 		sys.stdout.write('Starting producer for %s\n'%(self.domain))
-		outgoing_exchange = kombu.Exchange(name=self.group, type='direct')
-		self.rabbitmq_producer = kombu.Producer(rabbitmq_connection0, exchange=outgoing_exchange, serializer='json', compression=None, auto_declare=True)
-		if rabbitmq_connection0.connected:
-			outgoing_exchange(rabbitmq_connection0).declare()
+		threading.Thread(target = self.pika_publisher.run).start()
 
 	def runner(self, snooze=10):
 		sys.stdout.write('\nProcessing RSS runner for %s\n'%(self.domain))
 		while True:
 			alerts = []
 			for source_url in self.source_urls:
-				_alerts = self.parse_start_page(source_url)
-				alerts.extend(_alerts)
-				if source_url in self.scheduled_source_urls:
-					self.rabbitmq_producer.publish(json_util.dumps(_alerts), routing_key=self.group, serializer='json')
+				__alerts = []
+				for alert in self.parse_start_page(source_url):
+					if alert['id'] not in self.cache:
+						alerts.append(alert)
+						__alerts.append(alert)
+				if self.test_mode is False:
+					if self.pika_publisher is not None:
+						if len(__alerts):
+							if source_url in self.scheduled_source_urls:
+								self.pika_publisher.publish_messages(__alerts)
+				del __alerts
 			if len(alerts):
 				sys.stdout.write('\n Found %d new alerts for %s %s'%(len(alerts), self.domain, self.group))
-				self.insert_alerts(alerts)
+				if self.test_mode is False:
+					self.insert_alerts(alerts)
+			del alerts
 		time.sleep(snooze)
 
 	@staticmethod
@@ -84,7 +99,7 @@ if __name__== '__main__':
 		sys.stdout.write('\nrunning via ipython -> not running continously')
 	except NameError:
 		argparser = argparse.ArgumentParser(description='RSS producer')
-		argparser.add_argument('--domain', action='store', dest='domain', help='domain', required=True)
+		argparser.add_argument('--domain', action='store', dest='domain', help='domain', default=None)
 		argparser.add_argument('--test_mode', action='store_true', default=False)
 		argparser.add_argument('--snooze', default = 30.0, type=float)
 		args = argparser.parse_args()

@@ -3,19 +3,23 @@
 				"base_url":"http://www.businessinsider.com/",
 				"source_urls":["http://www.businessinsider.com/category/10-things-before-opening-bell.rss"],
 				"scheduled":[true],
-				"color":"#ff9900"
+				"color":"#ff9900",
+				"active":true
 			},
 	"CNN":{
 			"base_url":"http://money.cnn.com/",
-			"source_urls":["http://rss.cnn.com/rss/money_news_economy.rss"]
+			"source_urls":["http://rss.cnn.com/rss/money_news_economy.rss"],
+			"active":true
 		},
 	"ELUNIVERSAL":{
 				"base_url":"http://www.eluniversal.com.mx/",
-				"source_urls":["http://www.eluniversal.com.mx/rss.xml"]
+				"source_urls":["http://www.eluniversal.com.mx/rss.xml"],
+				"active":true
 		},
 	"JORNADA":{
 			"base_url":"http://www.jornada.unam.mx/ultimas",
-			"source_urls":["http://www.jornada.unam.mx/rss/economia.xml?v=1"]
+			"source_urls":["http://www.jornada.unam.mx/rss/economia.xml?v=1"],
+			"active":true
 	},
 	"Banxico":{
 			"base_url":"http://www.banxico.org.mx/",
