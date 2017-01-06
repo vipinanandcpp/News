@@ -169,27 +169,27 @@ class PIKA_PUBLISHER(object):
 		LOGGER.info('Published %i messages, %i have yet to be confirmed, ''%i were acked and %i were nacked', self._message_number, len(self._deliveries), self._acked, self._nacked)
 
 	def publish_messages(self, messages):
-	 	"""If the class is not stopping, publish messages to RabbitMQ"""
-	 	if self._stopping:
-	 		return
-	 	for message in messages:
-	 		self.publish_message(message)
+		"""If the class is not stopping, publish messages to RabbitMQ"""
+		if self._stopping:
+			return
+		for message in messages:
+			self.publish_message(message)
 
 	def publish_message(self, message):
-	 	"""If the class is not stopping, publish a message to RabbitMQ appending a list of deliveries with the message number that was sent. This list will be used to check for delivery confirmations in the
-	 	 on_delivery_confirmations method."""
+		"""If the class is not stopping, publish a message to RabbitMQ appending a list of deliveries with the message number that was sent. This list will be used to check for delivery confirmations in the
+		 on_delivery_confirmations method."""
 		if self._stopping:
-	 		return
-	 	self._channel.basic_publish(exchange=self.exchange_name, body = json_util.dumps(message, ensure_ascii=False), routing_key=self.routing_key, properties=pika.BasicProperties(content_type='application/json'))
-	 	self._message_number += 1
-	 	self._deliveries.append(self._message_number)
-	 	LOGGER.info('Published message # %i', self._message_number)
+			return
+		self._channel.basic_publish(exchange=self.exchange_name, body = json_util.dumps(message, ensure_ascii=False), routing_key=self.routing_key, properties=pika.BasicProperties(content_type='application/json'))
+		self._message_number += 1
+		self._deliveries.append(self._message_number)
+		LOGGER.info('Published message # %i', self._message_number)
 
 	def close_channel(self):
-	 	"""Invoke this command to close the channel with RabbitMQ by sending the Channel.Close RPC command."""
-	 	LOGGER.info('Closing the channel')
-	 	if self._channel:
-	 		self._channel.close()
+		"""Invoke this command to close the channel with RabbitMQ by sending the Channel.Close RPC command."""
+		LOGGER.info('Closing the channel')
+		if self._channel:
+			self._channel.close()
 
 	def run(self):
 		"""Run the example code by connecting and then starting the IOLoop."""
@@ -198,7 +198,7 @@ class PIKA_PUBLISHER(object):
 
 	def stop(self):
 		"""Stop the example by closing the channel and connection. We set a flag here so that we stop scheduling new messages to be
-	 	published. The IOLoop is started because this method is invoked by the Try/Catch below when KeyboardInterrupt is caught. Starting the IOLoop again will allow the publisher to cleanly disconnect from RabbitMQ."""
+		published. The IOLoop is started because this method is invoked by the Try/Catch below when KeyboardInterrupt is caught. Starting the IOLoop again will allow the publisher to cleanly disconnect from RabbitMQ."""
 		LOGGER.info('Stopping')
 		self._stopping = True
 		self.close_channel()
