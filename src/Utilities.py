@@ -6,7 +6,7 @@ import pandas as pd
 import pytz
 import settings
 import os
-import pymongo, redis, kombu
+import pymongo, redis, pika
 from concurrent.futures import ThreadPoolExecutor
 import concurrent.futures as cf
 #import MySQLdb
@@ -22,6 +22,7 @@ gmt = pytz.timezone('GMT')
 central_US_timezone = pytz.timezone('US/Central')
 
 python_version = sys.version_info.major
+pika_version = pika.__version__
 
 ticker_entity_mapping = {}
 for p in pd.read_csv(os.path.join(settings.src_files, 'data_files', 'ticker_entity_mapping.csv'))[['Symbol', 'Name']].itertuples(index=False):
@@ -54,12 +55,6 @@ def identify_server(current_public_ip):
 
 current_public_ip = get_hostname()
 instance_id, hostname0 = identify_server(current_public_ip)
-rabbitmq_connection0 = None
-try:
-	rabbitmq_connection0 = kombu.Connection(hostname=hostname0, transport='librabbitmq')
-	rabbitmq_connection0.connect()
-except Exception as e:
-	sys.stderr.write('Error connecting to RabbitMQ\n -> %s'%(e))
 
 # news data
 def get_redis_connection0():
