@@ -1,4 +1,4 @@
-import logging, pika, signal
+import logging, pika
 from bson import json_util
 
 #LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(name) -30s %(funcName) ' '-35s %(lineno) -5d: %(message)s')
@@ -205,9 +205,6 @@ class PIKA_PUBLISHER(object):
 		self.close_connection()
 		self._connection.ioloop.start()
 		LOGGER.info('Stopped')
-
-	def is_close_connection():
-		return self._closing
 
 	def close_connection(self):
 		"""This method closes the connection to RabbitMQ."""

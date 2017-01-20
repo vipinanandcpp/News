@@ -33,10 +33,6 @@ class RSS_PRODUCER(NewsParsers):
 		self.url_processor = URLProcessor(max_workers = max_workers)
 		self.rss_producer_rule_instance = getattr(rss_producer_rules, self.domain)()
 
-	def __del__(self, signum = None, frame = None):
-		self.stop()
-		sys.exit(0)
-
 	def __del__(self):
 		super(RSS_PRODUCER, self).__del__()
 

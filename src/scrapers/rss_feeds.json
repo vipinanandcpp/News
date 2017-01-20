@@ -24,6 +24,12 @@
 	"Banxico":{
 			"base_url":"http://www.banxico.org.mx/",
 			"source_urls":["http://www.banxico.org.mx/rsscb/rss?BMXC_canal=fix&BMXC_idioma=es"]
+	},
+	"Zerohedge":{
+			"base_url":"http://www.zerohedge.com",
+			"source_urls":["http://feeds.feedburner.com/zerohedge/feed"],
+			"active":true,
+			"scheduled":[true]
 	}
 
 }

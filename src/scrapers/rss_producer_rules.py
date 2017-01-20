@@ -87,5 +87,10 @@ class BusinessInsider(object):
 		alerts = parse_feed(rss_producer_instance, articles, local_tzinfo=eastern)
 		return alerts
 
+class Zerohedge(object):
+	def parse_feed(self, rss_producer_instance, articles):
+		alerts = parse_feed(rss_producer_instance, articles, local_tzinfo=utc)
+		return alerts
+
 
 
