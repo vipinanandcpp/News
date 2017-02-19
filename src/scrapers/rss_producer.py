@@ -20,10 +20,14 @@ class RSS_PRODUCER(NewsParsers):
 				RSS_PRODUCER.pika_publisher.run()
 			except Exception as e:
 				sys.stderr.write('Error connecting to RabbitMQ\n -> %s'%(e))
-				RSS_PRODUCER.stop_runner = True
+				RSS_PRODUCER.stop_producer()
 
 	@staticmethod
-	def stop_producer():
+	def stop_rss_producer(signum = None, frame = None):
+		RSS_PRODUCER.stop_runner = True
+
+	@staticmethod
+	def stop_producer(signum = None, frame = None):
 		if RSS_PRODUCER.pika_publisher is not None:
 			sys.stdout.write("Shutting down RSS producer channel\n")
 			RSS_PRODUCER.pika_publisher.stop()
@@ -66,11 +70,12 @@ class RSS_PRODUCER(NewsParsers):
 						__alerts.append(alert)
 				if self.test_mode is False:
 					if len(__alerts):
-						if source_url in self.scheduled_source_urls:
-							if RSS_PRODUCER.pika_publisher.is_running:
-								RSS_PRODUCER.pika_publisher.publish_messages(__alerts)
-							else:
-								sys.stderr.write('RSS producer is not running \n')
+						if self.start_producer:
+							if source_url in self.scheduled_source_urls:
+								if RSS_PRODUCER.pika_publisher.is_running:
+									RSS_PRODUCER.pika_publisher.publish_messages(__alerts)
+								else:
+									sys.stderr.write('RSS producer is not running \n')
 				del __alerts
 			if len(alerts):
 				sys.stdout.write('\n Found %d new alerts for %s %s'%(len(alerts), self.domain, self.group))
@@ -107,11 +112,18 @@ def main(args):
 				rss_producer.source_urls = domain_metadata['source_urls']
 				rss_producer.scheduled_source_urls = [source_url for source_url, is_scheduled in zip(domain_metadata['source_urls'], domain_metadata['scheduled']) if is_scheduled] if len(domain_metadata.get('scheduled',[])) else []
 				threading.Thread(target=rss_producer.runner, args = (snooze, )).start()
+
 	if start_producer:
 		for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
 			signal.signal(sig, RSS_PRODUCER.stop_producer)
 		atexit.register(RSS_PRODUCER.stop_producer)
 		RSS_PRODUCER.start_producer()
+	else:
+		for sig in [signal.SIGTERM, signal.SIGINT, signal.SIGHUP, signal.SIGQUIT]:
+			signal.signal(sig, RSS_PRODUCER.stop_rss_producer)
+		atexit.register(RSS_PRODUCER.stop_rss_producer)
+		while not RSS_PRODUCER.stop_runner:
+			pass
 
 if __name__== '__main__':
 	try:
