@@ -1,0 +1,22 @@
+<div class="pagination">
+	<table border=1>
+	{% for feed in feeds %}
+		<tr>
+			<td>{{feed.title}}</td>
+			<td><a href=# onclick='window.open("{{feed.url}}")'>Click for story</a></td>
+		</tr>
+	{% endfor %}
+	</table>
+	<span class="step-links">
+		{% if feeds.has_previous %}
+			<a href="?page={{ feeds.previous_page_number }}">previous</a>
+		{% endif %}
+
+		<span class="current">
+			Page {{ feeds.number }} of {{ feeds.paginator.num_pages }}.
+		</span>
+		{% if feeds.has_next %}
+			<a href="?page={{ feeds.next_page_number }}">next</a>
+		{% endif %}
+	</span>
+</div>
