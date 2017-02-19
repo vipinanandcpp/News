@@ -90,11 +90,12 @@ class RSS_PRODUCER(NewsParsers):
 		modified = redis_connection.get(url + "_modified")
 		etag = redis_connection.get(url + "_etag")
 		d = feedparser.parse(url, modified=modified, etag=etag, request_headers={'Cache-control': 'max-age=0'})
-		if d.status == 200:
-		 	if hasattr(d, 'modified'):
-		 		redis_connection.set(url + "_modified", d.modified)
-		 	if hasattr(d, 'etag'):
-		 		redis_connection.set(url + "_etag", d.etag)
+		if hasattr(d, 'status'):
+			if d.status == 200:
+			 	if hasattr(d, 'modified'):
+			 		redis_connection.set(url + "_modified", d.modified)
+			 	if hasattr(d, 'etag'):
+			 		redis_connection.set(url + "_etag", d.etag)
 		return d
 
 def main(args):
