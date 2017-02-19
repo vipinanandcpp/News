@@ -28,6 +28,7 @@ class PIKA_PUBLISHER(object):
 		self.queue_name = queue_name
 		self.routing_key = routing_key
 		self.exchange_type = exchange_type
+		self.is_running = False
 
 	def connect(self):
 		"""This method connects to RabbitMQ, returning the connection handle. When the connection is established, the on_connection_open method will be invoked by pika. If you want the reconnection to work, make
@@ -192,8 +193,9 @@ class PIKA_PUBLISHER(object):
 			self._channel.close()
 
 	def run(self):
-		"""Run the example code by connecting and then starting the IOLoop."""
+		"""Run the example code after connecting and then starting the IOLoop."""
 		self._connection = self.connect()
+		self.is_running = True
 		self._connection.ioloop.start()
 
 	def stop(self):
@@ -204,6 +206,7 @@ class PIKA_PUBLISHER(object):
 		self.close_channel()
 		self.close_connection()
 		self._connection.ioloop.start()
+		self.is_running = False
 		LOGGER.info('Stopped')
 
 	def close_connection(self):
