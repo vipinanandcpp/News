@@ -50,7 +50,7 @@ class RSS_PRODUCER(NewsParsers):
 	def parse_start_page(self, url):
 		alerts = []
 		data = RSS_PRODUCER.call_feedparser(url)
-		if hasattr(data, status)
+		if hasattr(data, 'status'):
 			if data.status != 304:
 				articles = data.get('entries')
 				alerts.extend(self.rss_producer_rule_instance.parse_feed(self, articles))
