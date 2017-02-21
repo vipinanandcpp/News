@@ -52,8 +52,9 @@ class RSS_PRODUCER(NewsParsers):
 		data = RSS_PRODUCER.call_feedparser(url)
 		if hasattr(data, 'status'):
 			if data.status != 304:
-				articles = data.get('entries')
-				alerts.extend(self.rss_producer_rule_instance.parse_feed(self, articles))
+				articles = data.get('entries', [])
+				if len(articles):
+					alerts.extend(self.rss_producer_rule_instance.parse_feed(self, articles))
 		return alerts
 
 	def runner(self, snooze=10):
