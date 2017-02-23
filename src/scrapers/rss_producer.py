@@ -55,6 +55,8 @@ class RSS_PRODUCER(NewsParsers):
 				articles = data.get('entries', [])
 				if len(articles):
 					alerts.extend(self.rss_producer_rule_instance.parse_feed(self, articles))
+		else:
+			sys.stderr.write("No data found for url %s"%(url))
 		return alerts
 
 	def runner(self, snooze=10):
@@ -97,6 +99,8 @@ class RSS_PRODUCER(NewsParsers):
 			 		redis_connection.set(url + "_modified", d.modified)
 			 	if hasattr(d, 'etag'):
 			 		redis_connection.set(url + "_etag", d.etag)
+		else:
+			sys.stderr.write("No data found for url %s"%(url))
 		return d
 
 def main(args):
