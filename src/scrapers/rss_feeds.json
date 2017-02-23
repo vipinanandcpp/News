@@ -9,7 +9,7 @@
 	"CNN":{
 			"base_url":"http://money.cnn.com/",
 			"source_urls":["http://rss.cnn.com/rss/money_news_economy.rss"],
-			"active":false
+			"active":true
 		},
 	"ELUNIVERSAL":{
 				"base_url":"http://www.eluniversal.com.mx/",
