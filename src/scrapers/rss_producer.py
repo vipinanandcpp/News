@@ -2,11 +2,18 @@ import sys, argparse, os, time, settings, signal, atexit, threading
 from pika_publisher import PIKA_PUBLISHER
 from url_processor import URLProcessor
 from bson import json_util
-import feedparser
 from scrapers.news_parser import NewsParsers, redis_connection
-from Utilities import hostname0
+from Utilities import hostname0, python_version
 import rss_producer_rules
 import logging
+
+if python_version >= 3:
+	import feedparser
+else:
+	try:
+		import feedparser2 as feedparser
+	except ImportError:
+		import feedparser
 
 class RSS_PRODUCER(NewsParsers):
 	pika_publisher = None
