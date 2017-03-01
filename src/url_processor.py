@@ -21,7 +21,7 @@ class URLProcessor(object):
 		try:
 			r = requests.get(url, headers=headers, verify=False, timeout=600)
 			extracted = Article(url = url, language=language)
-			extracted.download(html=r.content)
+			extracted.download(html=r.content.decode("utf-8"))
 			extracted.parse()
 			extracted.nlp()
 		except Exception as e:
