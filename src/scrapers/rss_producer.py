@@ -44,6 +44,8 @@ class RSS_PRODUCER(NewsParsers):
 
 	def __init__(self, domain, group='rss',parse_articles = False, test_mode = False, timeout = 600, max_workers = 10, expire_redis_keys = False, start_producer=False):
 		super(RSS_PRODUCER, self).__init__(domain= domain, group=group, test_mode=test_mode, timeout=timeout, parse_articles=parse_articles, max_workers = max_workers, expire_redis_keys = expire_redis_keys)
+		self.etag = None
+		self.modified = None
 		self.url_processor = URLProcessor(max_workers = max_workers)
 		self.rss_producer_rule_instance = getattr(rss_producer_rules, self.domain)()
 		self.start_producer = start_producer
@@ -56,7 +58,7 @@ class RSS_PRODUCER(NewsParsers):
 
 	def parse_start_page(self, url):
 		alerts = []
-		data = RSS_PRODUCER.call_feedparser(url)
+		data = self.call_feedparser(url)
 		if hasattr(data, 'status'):
 			if data.status != 304:
 				articles = data.get('entries', [])
@@ -95,17 +97,18 @@ class RSS_PRODUCER(NewsParsers):
 			del alerts
 			time.sleep(snooze)
 
-	@staticmethod
-	def call_feedparser(url):
-		modified = redis_connection.get(url + "_modified")
-		etag = redis_connection.get(url + "_etag")
-		d = feedparser.parse(url, modified=modified, etag=etag, request_headers={'Cache-control': 'max-age=0'})
+	def call_feedparser(self, url):
+		d = None
+		if (self.etag is None) or (self.modified is None):
+			d = feedparser.parse(url)
+		else:
+			d = feedparser.parse(url, modified=self.modified, etag=self.etag, request_headers={'Cache-control': 'max-age=0'})
 		if hasattr(d, 'status'):
 			if d.status == 200:
 			 	if hasattr(d, 'modified'):
-			 		redis_connection.set(url + "_modified", d.modified)
+			 		self.modified = d.modified
 			 	if hasattr(d, 'etag'):
-			 		redis_connection.set(url + "_etag", d.etag)
+			 		self.etag = d.etag
 		else:
 			sys.stderr.write("No data found for url %s\n"%(url))
 		return d
