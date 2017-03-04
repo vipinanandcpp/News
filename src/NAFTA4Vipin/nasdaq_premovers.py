@@ -132,50 +132,13 @@ total_users=set.union(impo_users,healthcare,mergers,verified,vip_users)
 
 # In[21]:
 
-import sys, logging, traceback
-import concurrent.futures as cf
-from concurrent.futures import ThreadPoolExecutor
-from goose import Goose
+import sys, logging
 
 
 
 headers = {
 		'browser_user_agent': 'Mozilla'
 	}
-
-class URLProcessor(object):
-	g = Goose()
-
-	def __init__(self, max_workers=50):
-		self.max_workers = max_workers
-
-	@staticmethod
-	def run_extraction(url):
-		extracted = None
-		try:
-			extracted = URLProcessor.g.extract(url = url)
-		except Exception as e:
-			sys.stderr.write('\n\t' + str(traceback.print_exc()))
-			logging.error(e, exc_info=1)
-			extracted = None
-		return extracted
-
-	def process_url(self, url):
-		return URLProcessor.run_extraction(url)
-
-	def process_urls(self, urls, timeout = 600):
-		results = {}
-		with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-			futures = {executor.submit(self.process_url, url):url for url in urls}
-			for future in cf.as_completed(futures, timeout=timeout):
-				if future.result() is not None:
-					url = futures[future]
-					try:
-						results[url] = future.result()
-					except Exception as e:
-						sys.stderr.write('\n\t' + str(traceback.print_exc()))
-						logging.error(e, exc_info=1)
-		return results
 
 
 # In[39]:
