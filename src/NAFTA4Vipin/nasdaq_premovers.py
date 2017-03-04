@@ -6,7 +6,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 #from datetime import datetime
 import time
 import datetime
-import pywintypes
+#import pywintypes
 
 from pyquery import PyQuery
 import pandas as pd
@@ -19,10 +19,10 @@ from email.mime.text import MIMEText
 
 # In[9]:
 
-import win32com.client
+#import win32com.client
 import numpy as np
 import collections
-import pythoncom
+#import pythoncom
 
 import logging
 
@@ -43,7 +43,7 @@ import os, datetime, pytz
 eastern = pytz.timezone('US/Eastern')
 utc = pytz.timezone('UTC')
 
-import logging
+import logging, settings
 
 sched = BlockingScheduler()
 logging.basicConfig()
@@ -56,14 +56,15 @@ API_KEY="qpZ2cmntw0fGcm0HSABSBLcWA"
 API_SECRET="31f7HkPPpCCEuVzC1FWEgRZLI0f06UQo3Ax80qopjxdzJ0gm3B"
 
 
-
+if not os.path.exists(os.path.join(settings.src_files, 'NAFTA4Vipin','NASDAQ')):
+    os.makedirs(os.path.join(settings.src_files, 'NAFTA4Vipin','NASDAQ'))
 
 # In[13]:
 
 auth = tweepy.AppAuthHandler(API_KEY, API_SECRET)
- 
+
 api = tweepy.API(auth, wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
- 
+
 if (not api):
     print ("Can't Authenticate")
     sys.exit(-1)
@@ -104,9 +105,9 @@ def process_big_dic(big_dic,total_users):
         dic_temp={}
         for user in  big_dic[symbol].keys():
             if user in total_users:
-               
+
                 dic_temp[user]=big_dic[symbol][user]
-        big_dic_out[symbol]=dic_temp        
+        big_dic_out[symbol]=dic_temp
     return big_dic_out
 
 
@@ -119,7 +120,7 @@ healthcare={"itrader75", "FZucchi", "Biotech2050", "BioTerp", "MartinShkreli", "
 
 mergers={"DonutShorts", "ScottMAustin", "bristei", "BrianSozzi", "advdesk", "alpepinnazzo", "Opinterest", "ACInvestorBlog", "Benzinga", "BenzingaPro", "BioBreakout", "BioRunUp", "BioStocks", "BloombergDeals", "Briefingcom", "CNBC", "CNBCSocial", "CNBCWorld", "CNBCnow", "DanaMattioli", "EricPFiercel", "FiercePharma", "GregRoumeliotis", "HiddenGemTrader", "Hypocrites_Oath", "JeeYeonParkCNBC", "Lebeaucarnews", "LianaBaker", "MarketCurrents", "MichaelStone", "NOD008", "OpenOutcrier", "Opinterest", "OptionsHawk", "OptionsTrader31", "QuoththeRavenSA", "Recode", "ScripMandy", "SheerazRaza", "SquawkCNBC", "Street_Insider", "SwatOptions", "TheDomino", "ThudderWicks", "TradeableAlerts", "WSJAsia", "WSJbusiness", "WSJdeals", "WallStChatter", "WrigleyTom", "adamfeuerstein", "ahess247", "bman_alerts", "bored2tears", "briefingcom", "carlquintanilla", "d4ytrad3", "danacimilluca", "davidfaber", "ehITM", "financialjuice", "kaylatausche", "lilnickysmith",
 				"lisamjarvis", "livesquawk", "markflowchatter", "megtirrell", "mooktrader", "natebecker", "ozoran", "pnani456", "tradermarket247", "tsilver_apex", "zbiotech", "CaptainFuture__", "Opinterest", "PreetaTweets", "NatalieGrover", "ymscapital", "theflynews", "SquawkStreet", "sonalibasak", "ldelevingne", "taralach", "BarbarianCap", "jonathanrockoff", "JohnCFierce", "nixon786", "DamianFierce", "GNWLive", "marlentweets", "SashaDamouni", "DougLavanture", "BrianSozzi", "VictoriaCraig", "blsuth", "mikeesterl", "sfef84", "TradeHawk", "DAMSConsulting", "WSJbreakingnews", "ReutersBiz", "nypostbiz", "nypost", "adamfeuerstein", "DamianFierce", "OMillionaires", "SA_Mergers", "brucejapsen", "BioBreakout", "pnani456", "Street_Insider"}
-	   
+
 verified={"theflynews", "thestreetalerts", "AlipesNews", "financialjuice", "Selerity", "BloombergTV", "fonsietrader", "cnbc", "zerohedge", "alpienews", "ForTraders", "ratingsnetwork", "NASDAQODUK", "SeekingAlpha", "Carl_C_Icahn", "benzinga", "elonmusk", "bloomberg", "business", "reuters", "ap", "wsj", "nytimes", "JNJNews", "MarketWatch", "DailyFXTeam", "FXStreetNews", "Briefingcom", "50Pips", "stocknews77", "stocknews99", "stocknews247", "snn_team", "stockwire24", "stock_newsnet24", "FXStreetReports", "ForexNewsMole", "RatingsNetwork", "BenzingaMedia", "MarketNewswire", "ConsumerFeed", "The_Analyst", "MarketCurrents", "financialpost", "KeithMcCullough", "SwingTradeAlert"}
 vip_users = { "DanaMattioli", "jonathanrockoff", "d4ytrad3", "OpenOutcrier", "DAMSConsulting", "QTRResearch" };
 garbagge={"stockstobuy"}
@@ -195,7 +196,7 @@ def select_top(easy_df_today):
                      diction[tico]=[row['title'],row['url']]
                      break
     return diction
-    
+
 
 
 # In[70]:
@@ -234,7 +235,7 @@ def prepare_tables():
         table_dic[str(contador)]=values
         contador=contador+1
     return table_dic
-    
+
 
 
 # In[25]:
@@ -251,7 +252,7 @@ def return_pos_neg(table_dic):
         net=temp[2]
         volume=row[4]
         pos_df.loc[simb]=[company,sale,change,net,volume]
-        
+
     neg_df=pd.DataFrame(columns=['Company','Last Sale','Change','Net%','Share Volume'])
     for simb in table_dic[str(6)].keys():
         row=table_dic[str(6)][simb]
@@ -263,12 +264,12 @@ def return_pos_neg(table_dic):
         net=temp[2]
         volume=row[4]
         neg_df.loc[simb]=[company,sale,change,net,volume]
-        
+
     #pos_df_sorted=pos_df.sort(['Net%'],ascending=False)
     #neg_df_sorted=neg_df.sort(['Net%'],ascending=False)
     pos_df['Neto']=pos_df['Net%'].str.rstrip('%').astype('float64')
     neg_df['Neto']=neg_df['Net%'].str.rstrip('%').astype('float64')
-    
+
     pos_df_sorted=pos_df.sort_values(['Neto'],ascending=False)
     neg_df_sorted=neg_df.sort_values(['Neto'],ascending=False)
 
@@ -276,7 +277,7 @@ def return_pos_neg(table_dic):
 
 
     return pos_df_sorted,neg_df_sorted
-    
+
 
 
 # In[37]:
@@ -333,9 +334,9 @@ def hit_twitter(total_users,tickers):
     big_dic_proc=process_big_dic(big_dic,total_users)
     easy_df_today=gimma_easy_df(big_dic_proc)
     return easy_df_today
-        
-        
-    
+
+
+
 
 
 # In[34]:
@@ -348,24 +349,24 @@ def return_html(pos_df_sorted,neg_df_sorted,top):
             news=top[idx][0]
             url="&nbsp"
             if top[idx][1] is not None:
-                url=top[idx][1]        
+                url=top[idx][1]
         #out1_jose = "<tr><td BGCOLOR=#00ff40>" +row['symbol'] + "<td align=center>" + cambio_str + "<td>" + "TEST" + "<td>" + str(msg.CreationTime) + "<td>" + msg.Subject.replace("*","") + "</tr>";
             out1_jose = "<tr><td BGCOLOR=#00ff40>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" + news+"<td>" + url+ "</tr>";
         else:
             out1_jose = "<tr><td BGCOLOR=#00ff40>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" +"&nbsp"+"<td>" +"&nbsp"+ "</tr>";
-        lista_big.append(out1_jose) 
+        lista_big.append(out1_jose)
 
     for idx ,row in neg_df_sorted.iterrows():
         if idx in top.keys():
             news=top[idx][0]
             url="&nbsp"
             if top[idx][1] is not None:
-                url=top[idx][1]        
+                url=top[idx][1]
         #out1_jose = "<tr><td BGCOLOR=#00ff40>" +row['symbol'] + "<td align=center>" + cambio_str + "<td>" + "TEST" + "<td>" + str(msg.CreationTime) + "<td>" + msg.Subject.replace("*","") + "</tr>";
             out1_jose = "<tr><td BGCOLOR=#ff0000>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" + news+"<td>" + url+ "</tr>";
         else:
             out1_jose = "<tr><td BGCOLOR=#ff0000>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" +"&nbsp"+"<td>" +"&nbsp"+ "</tr>";
-        lista_big.append(out1_jose ) 
+        lista_big.append(out1_jose )
     return lista_big
 
 
@@ -380,15 +381,15 @@ def pos_neg_2_print(pos_df_sorted,neg_df_sorted,top):
             news=top[idx][0]
             url=None
             if top[idx][1] is not None:
-                url=top[idx][1]        
+                url=top[idx][1]
         #out1_jose = "<tr><td BGCOLOR=#00ff40>" +row['symbol'] + "<td align=center>" + cambio_str + "<td>" + "TEST" + "<td>" + str(msg.CreationTime) + "<td>" + msg.Subject.replace("*","") + "</tr>";
             #out1_jose = "<tr><td BGCOLOR=#00ff40>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" + news+"<td>" + url+ "</tr>";
             lista=[ row['Company'] , row['Last Sale'] ,row['Change'] ,row['Net%'] , row['Share Volume'],news, url]
-            
+
         else:
             #out1_jose = "<tr><td BGCOLOR=#00ff40>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" +"&nbsp"+"<td>" +"&nbsp"+ "</tr>";
             lista=[ row['Company'] , row['Last Sale'] ,row['Change'] ,row['Net%'] , row['Share Volume'],None, None]
-        #lista_big.append(out1_jose ) 
+        #lista_big.append(out1_jose )
         pos_out.loc[idx]=lista
 
     for idx ,row in neg_df_sorted.iterrows():
@@ -396,85 +397,27 @@ def pos_neg_2_print(pos_df_sorted,neg_df_sorted,top):
             news=top[idx][0]
             url=None
             if top[idx][1] is not None:
-                url=top[idx][1]        
+                url=top[idx][1]
         #out1_jose = "<tr><td BGCOLOR=#00ff40>" +row['symbol'] + "<td align=center>" + cambio_str + "<td>" + "TEST" + "<td>" + str(msg.CreationTime) + "<td>" + msg.Subject.replace("*","") + "</tr>";
             #out1_jose = "<tr><td BGCOLOR=#ff0000>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" + news+"<td>" + url+ "</tr>";
             lista=[ row['Company'] , row['Last Sale'] ,row['Change'] ,row['Net%'] , row['Share Volume'],news, url]
         else:
             #out1_jose = "<tr><td BGCOLOR=#ff0000>" +idx + "<td >" + row['Company'] + "<td>" + row['Last Sale'] + "<td>" + row['Change'] + "<td>" + row['Net%'] +"<td>" + row['Share Volume']+"<td>" +"&nbsp"+"<td>" +"&nbsp"+ "</tr>";
             lista=[ row['Company'] , row['Last Sale'] ,row['Change'] ,row['Net%'] , row['Share Volume'],None, None]
-        #lista_big.append(out1_jose ) 
+        #lista_big.append(out1_jose )
         neg_out.loc[idx]=lista
     return pos_out,neg_out
 
 
 # In[73]:
 
-def send_email(users,total):
-    olMailItem = 0x0
 
-    pythoncom.CoInitialize()
-    obj = win32com.client.Dispatch("Outlook.Application")
-    newMail = obj.CreateItem(olMailItem)
-    today=datetime.datetime.now()
-    newMail.Subject = "NASDAQ TOP  MOVERS"+" AT "+today.strftime('%m/%d/%Y %H:%M')
-        #newMail.Body = "I I AM IN THE BODY\nSO AM I!!!"
-    #newMail.Body="The purpose of this table is to provide a guide that I can generate at any time during the day for the most impoortant news that move the ticker. I would say that the table will be complete: all main events from the day will be there so you do not have to spend time trying to find an explanation somehwere else."
-    newMail.HTMLBody=total
-    #newMail.To = "jperez@joseatm.com;SGould@joseatm.com;JGoodyear@joseatm.com;JGold@joseatm.com;KAzmoon@joseatm.com"
-    #newMail.To = "jperez@joseatm.com;JGold@joseatm.com"
-    #nicenewMail.To=users
-    #newMail.To ="jperez@joseatm.com;KAzmoon@joseatm.com"
-    #newMail.To = "who_to_send_to@example.com"
-    #newMail.CC="jperez@joseatm.com"
-    #newMail.CC = "moreaddresses here"
-    newMail.BCC =users
-    #attachment1 = "Path to attachment no. 1"
-    #attachment2 = "Path to attachment no. 2"
-    #newMail.Attachments.Add(attachment1)
-    #newMail.Attachments.Add(attachment2)
-    #newMail.display()
-    newMail.Send()
-    print('email sent.')
 
-def send_email_new(users,total):
-	today=datetime.datetime.now()
-	text="NASDAQ TOP  MOVERS"+" AT "+today.strftime('%m/%d/%Y %H:%M')
-    #we need to put gmail server , easy or pokemon
-	s = smtplib.SMTP("smtp.jose.corp")
-	me = 'jperez@jose.com'
-	you =users
-	msg = MIMEMultipart('alternative')
-	msg['Subject'] =text
-	msg['From'] = me
-	#msg['To'] =you
-	msg['Bcc'] =you
-	text="NASDAQ TOP  MOVERS"+" AT "+today.strftime('%m/%d/%Y %H:%M')
-	html=total
-	part1 = MIMEText(text, 'plain')
-	part2 = MIMEText(html, 'html')
 
-	# Attach parts into message container.
-	# According to RFC 2046, the last part of a multipart message, in this case
-	# the HTML message, is best and preferred.
-	msg.attach(part1)
-	msg.attach(part2)
-	s.sendmail(me, you.split(";"), msg.as_string())
-	s.quit()
-
-	
-	
-	
-
-   
-	print('email sent.')
-
-	
-	
 
 
 # In[74]:
-@sched.scheduled_job('cron', day_of_week='mon-fri', hour=8,minute=30,misfire_grace_time=600)
+@sched.scheduled_job('cron', day_of_week='sat-sun', hour=8,minute=30,misfire_grace_time=600)
 def timed_job():
 #main
     table_dic=prepare_tables()
@@ -486,35 +429,73 @@ def timed_job():
     lista_big=return_html(pos_sorted,neg_sorted,top)
 
     total=prepare_html_table(lista_big)
-    
-    users='jose.pereza@me.com'
-    send_email_new(users,total)
+
+    users='jose.pereza@me.com;vipin.anand.cpp@gmail.com'
+    send_email_new_gmail(users,total)
 
     today=datetime.datetime.now().date()
-	#path="F:\\BEST\\volatility"
-    path='put your vipin path here'
-    
+    path=os.path.join(settings.src_files, 'NAFTA4Vipin','NASDAQ')
+    #path='put your vipin path here'
+
     cmd=os.getcwd()
     #pos_sorted.to_csv(cmd+"\\"+"top_movers"+"\\"+"positive_"+today.strftime('%m%d%Y')+".csv")
     #neg_sorted.to_csv(cmd+"\\"+"top_movers"+"\\"+"negative_"+today.strftime('%m%d%Y')+".csv")
 
     #print for my numerical experiemnts
     pos_out,neg_out=pos_neg_2_print(pos_sorted,neg_sorted,top)
-    
-    pos_out.to_csv(path+"\\"+"positive_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
-    neg_out.to_csv(path+"\\"+"negative_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
 
-    
+    pos_out.to_csv(path+"/"+"positive_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
+    neg_out.to_csv(path+"/"+"negative_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
+
+
     #pos_out.to_csv(cmd+"\\"+"top_movers"+"\\"+"positive_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
     #neg_out.to_csv(cmd+"\\"+"top_movers"+"\\"+"negative_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
 
     #easy_df_today.to_csv(cmd+"\\"+"top_movers"+"\\"+"infoall_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
 
-    easy_df_today.to_csv(path+"\\"+"infoall_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
+    easy_df_today.to_csv(path+"/"+"infoall_"+today.strftime('%m%d%Y')+".csv",encoding='utf-8')
 
     print(cmd)
     #print(cmd+"\\"+"top_movers"+"\\"+"positive_"+today.strftime('%m%d%Y')+".csv")
 
+
+def send_email_new_gmail(users,total):
+    today=datetime.datetime.now()
+    text="TOP Movers "+today.strftime('%m/%d/%Y %H:%M')
+    s = smtplib.SMTP("smtp.gmail.com",587)
+
+    me = 'naftainsight1345@gmail.com'
+    pwd='emerson1954'
+    s.ehlo()
+    s.starttls()
+    s.login(me, pwd)
+
+    you =users
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] =text
+    msg['From'] = me
+    msg['To'] =[]
+    msg['Cc'] =[]
+    #msg['Bcc'] =you
+
+    html=total
+    #part1 = MIMEText(text, 'plain')
+    #part2 = MIMEText(total, 'html','utf-8')
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html','utf-8')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+    msg.attach(part2)
+    s.sendmail(me,[me]+[me]+ you.split(";"), msg.as_string().encode('ascii'))
+    s.quit()
+    print('email sent.')
+    #s.sendmail(me, you.split(";"), msg.as_string())
+    #s.quit()
+
+    #print('email sent.')
 
 
 
