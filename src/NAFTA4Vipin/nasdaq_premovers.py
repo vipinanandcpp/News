@@ -437,8 +437,7 @@ def send_email_new_gmail(users,total):
     msg = MIMEMultipart('alternative')
     msg['Subject'] =text
     msg['From'] = me
-    msg['To'] =[]
-    msg['Cc'] =[]
+    #msg['Cc'] =[]
     #msg['Bcc'] =you
 
     html=total
@@ -452,7 +451,7 @@ def send_email_new_gmail(users,total):
     # the HTML message, is best and preferred.
     msg.attach(part1)
     msg.attach(part2)
-    s.sendmail(me,[me]+[me]+ you.split(";"), msg.as_string().encode('ascii'))
+    s.sendmail(me, you, msg.as_string().encode('ascii'))
     s.quit()
     print('email sent.')
     #s.sendmail(me, you.split(";"), msg.as_string())
