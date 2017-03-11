@@ -2,7 +2,7 @@ import sys, argparse, os, time, settings, signal, atexit, threading
 from pika_publisher import PIKA_PUBLISHER
 from url_processor import URLProcessor
 from bson import json_util
-from scrapers.news_parser import NewsParsers, redis_connection
+from scrapers.news_parser import NewsParsers
 from Utilities import hostname0, python_version
 import rss_producer_rules
 import logging
